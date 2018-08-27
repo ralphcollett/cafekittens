@@ -1,19 +1,18 @@
 package com.cafekittens
 
-import org.scalajs.dom
-import dom.document
+import org.querki.jquery._
 
 object CafeKittens {
 
   def main(args: Array[String]): Unit = {
-    appendPar(document.body, "meow!")
+    $("""<button type="button">Click me!</button>""")
+      .click(() => addClickedMessage())
+      .appendTo($("body"))
+
+    $("#click-me-button").click(() => addClickedMessage())
   }
 
-  def appendPar(targetNode: dom.Node, text: String): Unit = {
-    val parNode = document.createElement("p")
-    val textNode = document.createTextNode(text)
-    parNode.appendChild(textNode)
-    targetNode.appendChild(parNode)
+  def addClickedMessage(): Unit = {
+    $("body").append("<p>You clicked the button!</p>")
   }
-
 }
