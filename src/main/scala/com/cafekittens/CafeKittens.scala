@@ -1,14 +1,14 @@
 package com.cafekittens
 
-import japgolly.scalajs.react.vdom.prefix_<^._
-import japgolly.scalajs.react.{BackendScope, Callback, ReactComponentB, ReactDOM, ReactEventI}
+import japgolly.scalajs.react.vdom.html_<^._
+import japgolly.scalajs.react.{BackendScope, Callback, _}
 import org.scalajs.dom
 
 import scala.util.Random
 
 object CafeKittens {
 
-  private val component = ReactComponentB[Unit]("Caffeine listings")
+  private val component = ScalaComponent.builder[Unit]("Caffeine listings")
     .initialState(BeverageState(Beverage("", 0)))
     .renderBackend[BeverageOps]
     .build
@@ -26,9 +26,9 @@ object CafeKittens {
 
   class BeverageOps($: BackendScope[Unit, BeverageState]) {
 
-    private val beverageState = $.zoom(_.beverage)((s, x) => s.copy(beverage = x))
+    private val beverageState = $.zoomState(_.beverage)(b => s => s.copy(beverage = b))
 
-    def searchForBeverage(event: ReactEventI): Callback = {
+    def searchForBeverage(event: ReactEventFromInput): Callback = {
       val randomBeverage = Random.shuffle(beverages).head
       beverageState.setState(randomBeverage)
     }
@@ -45,6 +45,6 @@ object CafeKittens {
   }
 
   def main(args: Array[String]): Unit = {
-    ReactDOM.render(component(), dom.document.getElementById("playground"))
+    component().renderIntoDOM(dom.document.getElementById("playground"))
   }
 }
